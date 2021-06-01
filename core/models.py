@@ -63,3 +63,33 @@ class Posts(models.Model):
     def get_image_by_id(cls, id):
         post = cls.objects.get(pk=id)
         return post
+
+
+class Comments(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE,
+                             related_name='comments')
+    comment = models.CharField(max_length=2000)
+
+    @classmethod
+    def save_comment(self):
+        self.save()
+
+    @classmethod
+    def get_comment(cls):
+        posts = cls.objects.all()
+        return posts
+
+    @classmethod
+    def delete_comment(self):
+        self.delete()
+
+    @classmethod
+    def delete_comment_by_id(cls, id):
+        comment = cls.objects.filter(pk=id)
+        comment.delete()
+
+    @classmethod
+    def get_comment_by_id(cls, id):
+        comment = cls.objects.get(pk=id)
+        return comment
