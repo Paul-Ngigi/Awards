@@ -85,3 +85,13 @@ class Login(View):
             print("Error")
         context = {"form": form}
         return render(request, self.template_name, context)
+
+
+class SignOut(View):
+    """
+    Sign out view
+    """
+
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        return redirect('login_view')
