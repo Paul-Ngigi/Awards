@@ -93,3 +93,12 @@ class Comments(models.Model):
     def get_comment_by_id(cls, id):
         comment = cls.objects.get(pk=id)
         return comment
+
+
+class Likes(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    post = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name='likes')
+    design = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    usability = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    creativity = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    content = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
