@@ -14,3 +14,10 @@ class PostsForm(forms.ModelForm):
         model = Posts
         exclude = ['user']
         fields = ['name', 'description', 'link', 'image1', 'image2', 'image3']
+
+
+class CommentsForm(forms.ModelForm):
+    class Meta:
+        model = Comments
+        exclude = []
+        fields = ['comment']
