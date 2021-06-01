@@ -78,3 +78,19 @@ def voting(request, pk):
             return redirect("/post/" + str(pk) + "/")
         return redirect("/post/" + str(pk) + "/")
     return redirect('index')
+
+
+class ProfileView(View):
+    """
+    profile view
+    """
+
+    def get(self, request, *args, **kwargs):
+        form = ProfileForm()
+        return render(request, "core/profile.html", {"form": form})
+
+    def post(self, request, *args, **kwargs):
+        form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
+        if form.is_valid():
+            form.save()
+            return redirect("profile_view")
