@@ -29,3 +29,29 @@ class IndexView(View):
             return render(request, "core/index.html", {"posts": posts, "form": form})
         else:
             return render(request, "core/index.html", {"posts": posts, "form": form})
+
+
+class PostsDetails(View):
+    """
+    Posts Details view
+    """
+
+    def get(self, request, pk, *args, **kwargs):
+        post = Posts.objects.get(id=pk)
+        commentForm = CommentsForm()
+        voteForm = VotesForm()
+        return render(request,
+                      "core/post_details.html",
+                      {"voteForm": voteForm, "post": post, "commentForm": commentForm})
+
+    def post(self, request, pk, *args, **kwargs):
+        commentForm = CommentsForm(request.POST, request.FILES)
+        voteForm = VotesForm(request.POST, request.FILES)
+        if commentForm.is_valid():
+            comment = commentForm.save(commit=False)
+            comment.user = request.user
+            comment.post = Posts.objects.get(id=pk)
+            comment.save()
+            return redirect("/post/" + str(pk) + "/")
+        else:
+            return redirect("/post/" + str(pk) + "/")
