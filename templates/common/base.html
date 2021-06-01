@@ -1,0 +1,38 @@
+{% load bootstrap5 %}
+{% load cloudinary %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% if title %}
+    <title>Awards - {{title}}</title>
+    {% endif %}
+    <!-- Static files -->
+    {% block style %}
+    {% load static %}
+    {% bootstrap_css %}
+    {% endblock %}
+</head>
+<body>
+{% include 'common/navbar.html' %}
+
+{% block content%}
+{% endblock %}
+
+
+{% block scripts %}
+{% bootstrap_javascript %}
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+<script src="https://kit.fontawesome.com/cc1a8ab208.js" crossorigin="anonymous"></script>
+<script>
+            UPLOADCARE_PUBLIC_KEY = '482c3d0a6e7b6fca5824';
+
+</script>
+
+<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js"></script>
+{% endblock %}
+</body>
+</html>
