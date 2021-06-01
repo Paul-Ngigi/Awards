@@ -55,3 +55,26 @@ class PostsDetails(View):
             return redirect("/post/" + str(pk) + "/")
         else:
             return redirect("/post/" + str(pk) + "/")
+
+
+def voting(request, pk):
+    post = Posts.objects.get(id=pk)
+    if request.method == 'POST':
+        likeForm = VotesForm(request.POST)
+        if likeForm.is_valid():
+            allLikes = Likes.objects.filter(user=request.user, post=post)
+            if len(allLikes) == 0:
+                liked = Likes(
+                    user=request.user,
+                    post=post,
+                    design=likeForm.cleaned_data.get("design"),
+                    usability=likeForm.cleaned_data.get("usability"),
+                    creativity=likeForm.cleaned_data.get("creativity"),
+                    content=likeForm.cleaned_data.get("content")
+                )
+                liked.save()
+                return redirect("/post/" + str(pk) + "/")
+            print(likeForm.errors)
+            return redirect("/post/" + str(pk) + "/")
+        return redirect("/post/" + str(pk) + "/")
+    return redirect('index')
