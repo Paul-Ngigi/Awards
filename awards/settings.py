@@ -12,10 +12,10 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 from pathlib import Path
 import os
+import cloudinary
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
@@ -28,7 +28,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -40,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     "authentication",
     "core",
+    'pyuploadcare.dj',
+    'tinymce',
+    'cloudinary',
 ]
 
 MIDDLEWARE = [
@@ -72,7 +74,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'awards.wsgi.application'
 
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -84,7 +85,6 @@ DATABASES = {
         'PASSWORD': 'root',
     }
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -104,7 +104,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
@@ -118,12 +117,21 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
 
+cloudinary.config(
+    cloud_name="dkc8auhyn",
+    api_key="988281254287388",
+    api_secret="p9cYVU0XA3sCB_NZpoaYALiw7wI"
+)
+
+UPLOADCARE = {
+    'pub_key': '482c3d0a6e7b6fca5824',
+    'secret': 'dd92928766640b0d2424',
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
