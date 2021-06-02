@@ -2,37 +2,21 @@
 {% load bootstrap5 %}
 
 {% block content %}
-<div class="row">
-    <div class="col-md-12">
-        <img src="{{post.image1}}" alt="" width="100%" height="600px">
-    </div>
-</div>
 <div class="container">
-    <div class="row mt-5">
-        <div class="col-md-12">
-            <h5 class="text-center">"{{post.description}}"</h5>
-        </div>
-    </div>
-
     <div class="row mt-4">
         <div class="col">
             <ul class="nav justify-content-center">
 
                 <li class="nav-item">
                     <a class="nav-link text-secondary fs-4" href="{{post.link}}" target="_blank"><button type="button"
-                            class="btn btn-outline-warning">
+                            class="btn btn-outline-success">
                             View Site
                         </button></a>
                 </li>
 
                 <li class="nav-item">
-                    <a class="nav-link active text-secondary fs-4" aria-current="page" href="#screenshots"><button
-                            class="btn btn-outline-warning">Screenshots</button></a>
-                </li>
-
-                <li class="nav-item">
                     <a class="nav-link text-secondary fs-4" href="#comments"><button type="button"
-                            class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                            class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#exampleModal">
                             Comments
                         </button></a>
                     <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
@@ -70,10 +54,10 @@
 
                 <li class="nav-item">
                     <!-- Button trigger modal -->
-                    <a class="nav-link text-secondary fs-4" href="#vote"><button type="button" class="btn btn-outline-warning" data-bs-toggle="modal"
-                        data-bs-target="#staticBackdrop">
-                        Vote
-                    </button></a>
+                    <a class="nav-link text-secondary fs-4" href="#vote"><button type="button"
+                            class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                            Vote
+                        </button></a>
 
                     <!-- Modal -->
                     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false"
@@ -106,14 +90,21 @@
         </div>
     </div>
 
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <h5 class="text-center">"{{post.description}}"</h5>
+        </div>
+    </div>
+
+    
 
     <div id="screenshots">
         <div class="row mt-2">
             <div class="col-md-6">
-                <img src="{{post.image2}}" alt="screenshot1" width="567px" height="700px">
+                <img src="{{post.image2}}" alt="screenshot1" width="567px" height="500px">
             </div>
             <div class="col-md-6">
-                <img src="{{post.image3}}" alt="screenshot2" width="567px" height="700px">
+                <img src="{{post.image3}}" alt="screenshot2" width="567px" height="500px">
             </div>
         </div>
     </div>

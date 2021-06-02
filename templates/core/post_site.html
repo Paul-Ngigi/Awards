@@ -1,0 +1,20 @@
+{% extends 'common/base.html' %}
+{% load static %}
+{% load bootstrap5 %}
+
+{% block content %}
+<div class="container">
+    <div class="row mt-5">
+        <div class="col-md-12">
+            <form action="{% url 'post_site' %}" style="width: 100%;" method="post">
+                {% csrf_token %}
+                {% bootstrap_form form%}
+                <div class="form-group">
+                    <input type="submit" class="btn btn-outline-primary btn-lg" value="Add Site">
+                </div>
+            </form>
+
+        </div>
+    </div>
+</div>
+{% endblock %}

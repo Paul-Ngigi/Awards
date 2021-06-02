@@ -1,12 +1,28 @@
 from django import forms
 from .models import Posts, Profile, Comments, Likes
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 
-class ProfileForm(forms.ModelForm):
+class CreateProfileForm(forms.ModelForm):
     class Meta:
         model = Profile
         exclude = ['user']
-        fields = ['dp', 'bio', 'phone_number']
+
+
+class UserUpdateForm(forms.ModelForm):
+    email = forms.EmailField()
+
+    class Meta:
+        model = User
+        fields = ['username', 'email']
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = Profile
+        fields = ['bio', 'dp']
 
 
 class PostsForm(forms.ModelForm):
@@ -38,6 +54,10 @@ rating_choices = [
 
 
 class VotesForm(forms.Form):
-    class Meta:
-        model = Likes
-        fields = ['creativity', 'content', 'design', 'usability']
+    design = forms.CharField(label='Design level', widget=forms.RadioSelect(choices=rating_choices))
+
+    usability = forms.CharField(label='Usability level', widget=forms.RadioSelect(choices=rating_choices))
+
+    creativity = forms.CharField(label='Creativity level', widget=forms.RadioSelect(choices=rating_choices))
+
+    content = forms.CharField(label='Content level', widget=forms.RadioSelect(choices=rating_choices))

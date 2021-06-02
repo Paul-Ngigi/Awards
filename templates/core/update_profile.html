@@ -1,13 +1,13 @@
 {% extends 'common/base.html' %}
 {% load static %}
+{% load bootstrap5 %}
 
 {% block content %}
-<div class="container">
-    <div class="row mt-3">
-        {% for profile in profiles %}
+<div class="container mt-5">
+    <div class="row">
         <div class="col-md-5">
-            {% if profile.dp %}
-            <img src="{{ user.profile.dp }}" alt="profile image" class="rounded-circle profiles-img" height="200">
+            {% if profiles.dp %}
+            <img src="{{ profile.dp }}" alt="profile image" class="rounded-circle profiles-img">
             {% else %}
             <img src="{% static 'images/User.webp' %}" alt="" height="200">
             {% endif %}
@@ -23,18 +23,27 @@
                 </div>
             </div>
         </div>
-        <a class="btn btn-outline-success mt-2" href="{% url 'update_profile' user.profile.id%}">Update profile</a>
+        <div class="col-md-8"></div>
     </div>
-    {% endfor %}
 
     <div class="row">
-        <hr class="mt-5">
-        {% for post in posts%}
-        <div class="col-md-4">
-            <img src="{{post.image1}}" alt="" height="400px">
+        <div class="col-md-12">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <legend class="border-bottom my-4" style="font-style: italic; font-weight:bold; font-size: 30px;">
+                    Profile Info
+                </legend>
+                {% bootstrap_form u_form%}
+                {% bootstrap_form p_form%}
+                <div class="form-group mb-5">
+                    <button class="btn btn-outline-success" type="submit">Update</button>
+                </div>
+            </form>
         </div>
-        {% endfor %}
     </div>
-
 </div>
+
+{% for message in messages %}
+{{message}}
+{% endfor %}
 {% endblock %}

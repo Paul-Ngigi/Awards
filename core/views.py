@@ -1,10 +1,13 @@
+import re
 from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from django.views.generic import View
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
-from .models import Posts, Likes
-from .forms import PostsForm, CommentsForm, VotesForm, ProfileForm
+from .models import Posts, Likes, Profile
+from .forms import PostsForm, CommentsForm, VotesForm, UserUpdateForm, ProfileUpdateForm
+from django.contrib import messages
 
 User = get_user_model()
 
@@ -19,7 +22,9 @@ class IndexView(View):
     def get(self, request, *args, **kwargs):
         form = PostsForm()
         posts = Posts.objects.all()
-        return render(request, "core/index.html", {"posts": posts, "form": form})
+        votes = Likes.objects.all()
+        user = User
+        return render(request, "core/index.html", {"posts": posts, "form": form, "votes": votes})
 
     @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
@@ -83,17 +88,46 @@ def voting(request, pk):
     return redirect('index')
 
 
-class ProfileView(View):
-    """
-    profile view
-    """
+def profile(request, username):
+    title = "profile"
+    posts = Posts.get_user(username)
+    profile = Profile.get_user(username)
+    print(request.user)
+    print(profile)
+    return render(request, 'core/profile.html', {"title": title, "profiles": profile, "posts": posts})
 
-    def get(self, request, *args, **kwargs):
-        form = ProfileForm()
-        return render(request, "core/profile.html", {"form": form})
 
-    def post(self, request, *args, **kwargs):
-        form = ProfileForm(request.POST, request.FILES, instance=request.user.profile)
-        if form.is_valid():
-            form.save()
-            return redirect("profile_view")
+def update_profile(request, profile_id):
+    user = User.objects.get(pk=profile_id)
+    if request.method == "POST":
+        u_form = UserUpdateForm(request.POST, instance=request.user)
+        p_form = ProfileUpdateForm(request.POST, request.FILES, instance=request.user.profile)
+        if u_form.is_valid() and p_form.is_valid():
+            u_form.save()
+            p_form.save()
+            messages.success(request, f"You Have Successfully Updated Your Profile!")
+    else:
+        u_form = UserUpdateForm(instance=request.user)
+        p_form = ProfileUpdateForm(instance=request.user.profile)
+
+    return render(request, 'core/update_profile.html', {"u_form": u_form, "p_form": p_form})
+
+
+def post_site(request):
+    current_user = request.user
+    print(current_user)
+    form = PostsForm(request.POST, request.FILES)
+    print(form)
+    if form.is_valid():
+        print("Valid")
+        form = form.save(commit=False)
+        form.user = current_user
+        form.save()
+        print("saved")
+        redirect('index_view')
+        print("redirecting")
+    
+    else:
+        form = PostsForm()
+
+    return render(request, "core/post_site.html", {"form": form})

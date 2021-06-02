@@ -5,6 +5,8 @@ from django.db import models
 from django.contrib.auth.models import User
 from tinymce.models import HTMLField
 from cloudinary.models import CloudinaryField
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 # Create your models here.
@@ -13,13 +15,27 @@ class Profile(models.Model):
                                 related_name='profile')
     dp = ImageField(manual_crop='1024x1024')
     bio = HTMLField(max_length=500)
-    phone_number = models.BigIntegerField()
+    phone_number = models.BigIntegerField(null=True)
 
     def save_profile(self):
         self.save()
 
     def delete_profile(self):
         self.delete()
+
+    @classmethod
+    def get_user(cls, username):
+        profile = cls.objects.filter(user__username__icontains=username)
+        return profile
+
+    @receiver(post_save, sender=User)
+    def create_user_profile(sender, instance, created, **kwargs):
+        if created:
+            Profile.objects.create(user=instance)
+
+    @receiver(post_save, sender=User)
+    def save_user_profile(sender, instance, **kwargs):
+        instance.profile.save()
 
     def __str__(self):
         return self.user.username
@@ -64,6 +80,19 @@ class Posts(models.Model):
         post = cls.objects.get(pk=id)
         return post
 
+    @classmethod
+    def get_user(cls, username):
+        user = cls.objects.filter(user__username__icontains=username)
+        return user
+
+    @classmethod
+    def get_projects(cls, name):
+        return cls.objects.filter(title__icontains=name)
+
+    @classmethod
+    def user_projects(cls, profile):
+        return cls.objects.filter(profile=profile)
+
 
 class Comments(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='comments')
@@ -96,16 +125,10 @@ class Comments(models.Model):
         return comment
 
 
-RATE_CHOICES = [(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'), (10, '10'), ]
-
-
 class Likes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name='likes')
-    creativity = models.PositiveSmallIntegerField(choices=RATE_CHOICES, null=True)
-    content = models.PositiveSmallIntegerField(choices=RATE_CHOICES, null=True)
-    design = models.PositiveSmallIntegerField(choices=RATE_CHOICES, null=True)
-    usability = models.PositiveSmallIntegerField(choices=RATE_CHOICES, null=True)
-
-    def __str__(self):
-        return self.user.username
+    design = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], default=1)
+    usability = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], default=1)
+    creativity = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], default=1)
+    content = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)], default=1)

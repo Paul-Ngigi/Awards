@@ -3,11 +3,16 @@
 
 {% block content %}
     {% for post in posts %}
-    <a href="/post/{{post.id}}/"><img src="{{post.image1}}" alt="" width="100%" height="600"></a>
     <div class="container">
-        <div class="row  mt-2">
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <a href="/post/{{post.id}}/"><img src="{{post.image1}}" alt="" width="100%" height="800px%"></a>
+            </div>
+        </div>
+        <div class="row">
+            <hr class="mt-4">
             <div class="col-md-2">
-                <a href="{{post.link}}" target="_blank" class="btn btn-outline-warning">Visit Site</a>
+                <a href="{{post.link}}" target="_blank" class="btn btn-outline-success">Visit Site</a>
             </div>
             {% for vote in votes %}
             <div class="col-md-2">
@@ -26,6 +31,7 @@
                 <p>CONTENT</p>
                 <p>{{vote.design}}/10</p>
             </div>
+            <hr class="mt-1">
             {% endfor %}
         </div>
         
