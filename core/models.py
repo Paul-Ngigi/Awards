@@ -70,6 +70,7 @@ class Comments(models.Model):
     post = models.ForeignKey(Posts, on_delete=models.CASCADE,
                              related_name='comments')
     comment = models.CharField(max_length=2000)
+    posted_on = models.DateTimeField(auto_now_add=True)
 
     @classmethod
     def save_comment(self):
@@ -95,10 +96,16 @@ class Comments(models.Model):
         return comment
 
 
+RATE_CHOICES = [(1, '1'), (2, '2'), (3, '3'), (4, '4'), (5, '5'), (6, '6'), (7, '7'), (8, '8'), (9, '9'), (10, '10'), ]
+
+
 class Likes(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Posts, on_delete=models.CASCADE, related_name='likes')
-    design = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
-    usability = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
-    creativity = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
-    content = models.IntegerField(validators=[MinValueValidator(1), MaxValueValidator(10)])
+    creativity = models.PositiveSmallIntegerField(choices=RATE_CHOICES, null=True)
+    content = models.PositiveSmallIntegerField(choices=RATE_CHOICES, null=True)
+    design = models.PositiveSmallIntegerField(choices=RATE_CHOICES, null=True)
+    usability = models.PositiveSmallIntegerField(choices=RATE_CHOICES, null=True)
+
+    def __str__(self):
+        return self.user.username

@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import get_user_model, authenticate, login, logout
 from django.views.generic import View
 from .forms import LoginForm, RegistrationForm
-from core.models import Profile
 
 User = get_user_model()
 
@@ -77,7 +76,7 @@ class Login(View):
                     print("anything7")
                     login(request, user)
                     print("anything8")
-                    return redirect('home_view')
+                    return redirect('index_view')
 
                 else:
                     request.session['invalid_user'] = 1

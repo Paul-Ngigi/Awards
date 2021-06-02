@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from .models import Posts, Likes
 from .forms import PostsForm, CommentsForm, VotesForm, ProfileForm
 
@@ -14,11 +15,13 @@ class IndexView(View):
     Index view
     """
 
+    @method_decorator(login_required)
     def get(self, request, *args, **kwargs):
         form = PostsForm()
         posts = Posts.objects.all()
         return render(request, "core/index.html", {"posts": posts, "form": form})
 
+    @method_decorator(login_required)
     def post(self, request, *args, **kwargs):
         form = PostsForm(request.POST, request.FILES)
         posts = Posts.objects.all()

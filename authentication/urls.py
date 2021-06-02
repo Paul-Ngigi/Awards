@@ -4,7 +4,7 @@ from django_registration.backends.one_step.views import RegistrationView
 
 urlpatterns = [
     path('tinymce/', include('tinymce.urls')),
-    path('login', Login.as_view(), name='login_view'),
+    path('login/', Login.as_view(), name='login_view'),
     path('signup/', SignUp.as_view(), name='signup_view'),
     path('signout/', SignOut.as_view(), name='signout_view'),
     path('auth/', include('django_registration.backends.one_step.urls')),

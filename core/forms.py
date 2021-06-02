@@ -38,10 +38,6 @@ rating_choices = [
 
 
 class VotesForm(forms.Form):
-    design = forms.CharField(label='Design level', widget=forms.RadioSelect(choices=rating_choices))
-
-    usability = forms.CharField(label='Usability level', widget=forms.RadioSelect(choices=rating_choices))
-
-    creativity = forms.CharField(label='Creativity level', widget=forms.RadioSelect(choices=rating_choices))
-
-    content = forms.CharField(label='Content level', widget=forms.RadioSelect(choices=rating_choices))
+    class Meta:
+        model = Likes
+        fields = ['creativity', 'content', 'design', 'usability']
