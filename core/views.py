@@ -47,14 +47,13 @@ class PostsDetails(View):
     def get(self, request, pk, *args, **kwargs):
         post = Posts.objects.get(id=pk)
         commentForm = CommentsForm()
-        voteForm = VotesForm()
+        vote_form = VotesForm()
         return render(request,
                       "core/post_details.html",
-                      {"voteForm": voteForm, "post": post, "commentForm": commentForm})
+                      {"post": post, "commentForm": commentForm, "voteForm": vote_form})
 
     def post(self, request, pk, *args, **kwargs):
         commentForm = CommentsForm(request.POST, request.FILES)
-        voteForm = VotesForm(request.POST, request.FILES)
         if commentForm.is_valid():
             comment = commentForm.save(commit=False)
             comment.user = request.user
@@ -65,27 +64,53 @@ class PostsDetails(View):
             return redirect("/post/" + str(pk) + "/")
 
 
-def voting(request, pk):
-    post = Posts.objects.get(id=pk)
+def vote_post(request, id):
+    post = Posts.objects.get(id=id)
+    likes = Likes.objects.filter(post=post)
+    design = []
+    usability = []
+    creativity = []
+    content = []
+    for x in likes:
+        design.append(x.design)
+        usability.append(x.usability)
+        creativity.append(x.creativity)
+        content.append(x.content)
+    de = []
+    us = []
+    cre = []
+    con = []
+
+    if len(usability) > 0:
+        usa = (sum(usability) / len(usability))
+        us.append(usa)
+    if len(creativity) > 0:
+        crea = (sum(creativity) / len(creativity))
+        cre.append(crea)
+    if len(design) > 0:
+        des = (sum(design) / len(design))
+        de.append(des)
+    if len(content) > 0:
+        cont = (sum(content) / len(content))
+        con.append(cont)
+
+    vote_form = VotesForm()
+
     if request.method == 'POST':
-        likeForm = VotesForm(request.POST)
-        if likeForm.is_valid():
-            allLikes = Likes.objects.filter(user=request.user, post=post)
-            if len(allLikes) == 0:
-                liked = Likes(
-                    user=request.user,
-                    post=post,
-                    design=likeForm.cleaned_data.get("design"),
-                    usability=likeForm.cleaned_data.get("usability"),
-                    creativity=likeForm.cleaned_data.get("creativity"),
-                    content=likeForm.cleaned_data.get("content")
-                )
-                liked.save()
-                return redirect("/post/" + str(pk) + "/")
-            print(likeForm.errors)
-            return redirect("/post/" + str(pk) + "/")
-        return redirect("/post/" + str(pk) + "/")
-    return redirect('index')
+
+        vote_form = VotesForm(request.POST)
+        if vote_form.is_valid():
+            design = vote_form.cleaned_data['design']
+            usability = vote_form.cleaned_data['usability']
+            content = vote_form.cleaned_data['content']
+            creativity = vote_form.cleaned_data['creativity']
+            rating = Likes(design=design, usability=usability,
+                           content=content, creativity=creativity,
+                           user=request.user, post=post)
+            rating.save()
+            return redirect('/')
+    return render(request, 'core/post_details.html',
+                  {"post": post, "des": des, "usa": usa, "cont": cont, "crea": crea, "voteForm": vote_form})
 
 
 def profile(request, username):
@@ -126,7 +151,7 @@ def post_site(request):
         print("saved")
         redirect('index_view')
         print("redirecting")
-    
+
     else:
         form = PostsForm()
 
